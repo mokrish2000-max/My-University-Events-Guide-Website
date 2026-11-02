@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Riwaq logo</title>
+  <rect width="128" height="128" rx="30" fill="#d9f36a"/>
+  <path d="M25 101V58a39 39 0 0 1 78 0v43H88V58a24 24 0 0 0-48 0v43H25Z" fill="#6c4cf1"/>
+  <path d="M48 101V59a16 16 0 0 1 32 0v42H68V59a4 4 0 0 0-8 0v42H48Z" fill="#24213a"/>
+  <path d="M20 105h88" fill="none" stroke="#24213a" stroke-linecap="round" stroke-width="8"/>
+</svg>
