@@ -1,6 +1,15 @@
 // Language toggle and translations.
 (() => {
   const translations = {
+    "أحدث الفعاليات": "Latest events",
+    "آخر الفعاليات المضافة إلى الدليل.": "The latest events added to the guide.",
+    "أعضاء الفريق المشاركون في إعداد المشروع.": "Team members who worked on the project.",
+    "المكان أو المنصة": "Venue or platform",
+    "كل الأماكن": "All venues",
+    "نموذج التسجيل التجريبي": "Demo registration form",
+    "برمجة التفاعل باستخدام JavaScript": "JavaScript interactions",
+    "الرد على الرسائل": "Message replies",
+    "يرد فريق المشروع عند توفره.": "The project team replies when available.",
     "الرئيسية": "Home",
     "كل الفعاليات": "All events",
     "عن الدليل": "About",
@@ -28,12 +37,20 @@
     "فريق المشروع": "Project team",
     "أضف أسماء أعضاء الفريق ومعرّفاتهم الجامعية قبل التسليم.": "Add the team members' names and university IDs before submission.",
     "عن الفريق ←": "About the team ←",
-    "اسم عضو الفريق 1": "Team member 1",
     "علي الحاج حسين": "Ali Al-Haj Hussein",
-    "اسم عضو الفريق 2": "Team member 2",
-    "اسم عضو الفريق 3": "Team member 3",
-    "المعرّف الجامعي: يُضاف لاحقاً": "University ID: to be added",
     "المعرّف الجامعي: Ali_446068": "University ID: Ali_446068",
+    "علي مقرش": "Ali Maqresh",
+    "مطور واجهات ومحتوى": "Frontend and content developer",
+    "المعرّف الجامعي: ali_310332": "University ID: ali_310332",
+    "سجى خرسة": "Saja Kharsa",
+    "مطور برمجيات وطرفية": "Software and terminal developer",
+    "المعرّف الجامعي: saja_221237": "University ID: saja_221237",
+    "تيم جابر": "Taim Jaber",
+    "مختبر جودة واختبارات": "Quality and testing specialist",
+    "المعرّف الجامعي: taim_291207": "University ID: taim_291207",
+    "أمثل سعده": "Amthal Saadeh",
+    "مسؤول التوثيق و الاستضافة": "Documentation and hosting manager",
+    "المعرّف الجامعي: amthl_296558": "University ID: amth_296558",
     "لديك فعالية تستحق أن تُكتشف؟": "Have an event worth discovering?",
     "ساعدنا في جعل الحرم الجامعي أكثر حيوية بمشاركة نشاطك القادم.": "Help make campus more vibrant by sharing your upcoming event.",
     "اقترح فعالية ←": "Suggest an event ←",
@@ -44,7 +61,7 @@
     "التفاصيل ←": "Details ←",
     "تواصل معنا": "Contact us",
     "تصفّح الفعاليات": "Browse events",
-    "© 2026 رواق — مشروع جامعي تجريبي. الفعاليات أمثلة افتراضية، وبيانات التواصل غير المكتملة قيد الاستكمال.": "© 2026 Riwaq — A university project prototype. Events are fictional examples; incomplete contact details are being finalized.",
+    "© 2026 رواق — مشروع جامعي تجريبي. الفعاليات أمثلة افتراضية.": "© 2026 Riwaq — A university project prototype. Events are fictional examples.",
     "مساحة واحدة لكل ما يحدث في مجتمع الجامعة.": "One place for everything happening in the university community.",
     "بحث": "Search",
     "ابحث عن فعالية أو مكان...": "Search events or venues...",
@@ -204,10 +221,10 @@
         const value = element.getAttribute(attribute);
         if (value && translations[value]) element.setAttribute(attribute, translations[value]);
       });
-      document.querySelectorAll('input[type="hidden"][value]').forEach(element => {
-        const value = element.getAttribute("value");
-        if (value && translations[value]) element.value = translations[value];
-      });
+    });
+    document.querySelectorAll('input[type="hidden"][value]').forEach(element => {
+      const value = element.getAttribute("value");
+      if (value && translations[value]) element.value = translations[value];
     });
 
     const page = location.pathname.split("/").pop() || "index.html";

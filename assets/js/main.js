@@ -137,7 +137,7 @@ if (featuredEvents || latestEvents) {
       : `<div class="col-12"><p class="text-secondary">${translate("لا توجد فعاليات قادمة حالياً.")}</p></div>`;
   }
   if (latestEvents) {
-    const laterEvents = upcomingEvents.slice(3, 6);
+    const laterEvents = eventsData.slice(-3).reverse();
     latestEvents.innerHTML = laterEvents.length
       ? laterEvents.map(eventCard).join("")
       : `<div class="col-12"><p class="text-secondary">${translate("تابعنا، ستُضاف فعاليات قادمة قريباً.")}</p></div>`;
@@ -152,20 +152,28 @@ if (eventsGrid) {
   const date = document.getElementById("dateFilter");
   const sort = document.getElementById("sortFilter");
   const mode = document.getElementById("modeFilter");
+  const place = document.getElementById("placeFilter");
+  [...new Set(eventsData.map(event => eventText(event, "place")))].forEach(location => {
+    const option = document.createElement("option");
+    option.value = location;
+    option.textContent = location;
+    place.appendChild(option);
+  });
   const queryCategory = new URLSearchParams(location.search).get("category");
   if (queryCategory) category.value = queryCategory;
 
   function updateEvents() {
     const now = new Date();
-    let list = getUpcomingEvents(now).filter(event => {
+    let list = eventsData.filter(event => {
       const text = `${eventText(event, "title")} ${eventText(event, "place")} ${eventText(event, "organizer")} ${eventText(event, "desc")}`.toLowerCase();
       return text.includes(search.value.trim().toLowerCase()) &&
         (!category.value || event.category === category.value) &&
-        (!mode.value || event.mode === mode.value);
+        (!mode.value || event.mode === mode.value) &&
+        (!place.value || eventText(event, "place") === place.value);
     });
 
-    if (date.value === "week") list = list.filter(event => getEventDateTime(event) <= addDays(now, 7));
-    if (date.value === "month") list = list.filter(event => getEventDateTime(event) <= addDays(now, 30));
+    if (date.value === "week") list = list.filter(event => getEventDateTime(event) >= now && getEventDateTime(event) <= addDays(now, 7));
+    if (date.value === "month") list = list.filter(event => getEventDateTime(event) >= now && getEventDateTime(event) <= addDays(now, 30));
 
     if (sort.value === "late") list.sort((a, b) => getEventDateTime(b) - getEventDateTime(a));
     else if (sort.value === "az") list.sort((a, b) => eventText(a, "title").localeCompare(eventText(b, "title"), window.riwaqLanguage === "en" ? "en" : "ar"));
@@ -176,11 +184,11 @@ if (eventsGrid) {
       : `<div class="col-12"><div class="alert alert-warning">${translate("لم نعثر على فعاليات مطابقة. جرّب تغيير البحث أو الفلاتر.")}</div></div>`;
 
     document.getElementById("resultCount").textContent = window.riwaqLanguage === "en"
-      ? `Showing ${list.length} of ${getUpcomingEvents(now).length} upcoming events`
-      : `عرض ${list.length} من ${getUpcomingEvents(now).length} فعاليات قادمة`;
+      ? `Showing ${list.length} of ${eventsData.length} events`
+      : `عرض ${list.length} من ${eventsData.length} فعاليات`;
   }
 
-  [search, category, date, sort, mode].filter(Boolean).forEach(control => control.addEventListener("input", updateEvents));
+  [search, category, date, sort, mode, place].filter(Boolean).forEach(control => control.addEventListener("input", updateEvents));
   updateEvents();
 }
 
@@ -202,6 +210,9 @@ if (detailTitle) {
     document.getElementById("detailCategory").textContent = eventText(event, "category");
     detailTitle.textContent = eventText(event, "title");
     document.getElementById("detailDescription").textContent = eventText(event, "desc");
+    document.getElementById("detailExtra").textContent = window.riwaqLanguage === "en"
+      ? `Organized by ${eventText(event, "organizer")}. Starts at ${event.time} on ${formatDate(event.date)} and lasts ${formatDuration(event.durationMinutes)}. ${translate(event.registrationRequired ? "يتطلب التسجيل" : "الدخول مفتوح")}.`
+      : `تنظم الفعالية ${event.organizer}، وتبدأ الساعة ${event.time} بتاريخ ${formatDate(event.date)}، ومدتها ${formatDuration(event.durationMinutes)}. ${event.registrationRequired ? "المشاركة تتطلب التسجيل." : "الدخول مفتوح ولا يتطلب التسجيل."}`;
     document.getElementById("detailDate").textContent = formatDate(event.date);
     document.getElementById("detailTime").textContent = event.time;
     document.getElementById("detailDuration").textContent = formatDuration(event.durationMinutes);
@@ -295,6 +306,10 @@ if (contactForm) {
     const subject = document.getElementById("messageSubject");
     const message = document.getElementById("messageText");
     const alert = document.getElementById("contactAlert");
+    // إزالة الفراغات قبل التحقق من طول الاسم والرسالة.
+    name.value = name.value.trim();
+    email.value = email.value.trim();
+    message.value = message.value.trim();
     const submitButton = contactForm.querySelector('button[type="submit"]');
 
     [name, email, subject, message].forEach(field => {
